@@ -1,20 +1,13 @@
 'use client';
 
-import { FormEvent, ChangeEvent, useState } from 'react';
-// import { useLogin } from '@/hooks';
 import Form from './Form';
+import {useLogin} from '@/app/hooks';
+import Link from 'next/link';
+import { ToastContainer } from 'react-toastify';
 
 
 export default function LoginForm() {
-	// const { email, password, isLoading, onChange, onSubmit } = useLogin();
-
-    // TODO: Temporarily added them, will remove once start using redux
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const onChange = (event: ChangeEvent<HTMLInputElement>) => {}
-
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {}
+	const { email, password, onChange, onSubmit } = useLogin();
 
 	const config = [
 		{
@@ -34,12 +27,22 @@ export default function LoginForm() {
 	];
 
 	return (
-		<Form
-			config={config}
-			btnText='Login'
-			formHeader='Login'
-			onChange={onChange}
-			onSubmit={onSubmit}
-		/>
+		<div>
+			<Form
+				config={config}
+				btnText='Login'
+				formHeader='Login'
+				onChange={onChange}
+				onSubmit={onSubmit}
+			/>
+			<p className="text-white text-center">
+				New here?{' '}
+				<Link href="/auth/register" className="text-blue-400 hover:underline">
+					Create an account
+				</Link>
+			</p>
+			<ToastContainer/>
+		</div>
+
 	);
 }

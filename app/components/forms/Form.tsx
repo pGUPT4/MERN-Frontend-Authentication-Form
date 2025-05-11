@@ -25,7 +25,7 @@ export default function Form({
 	onSubmit,
 }: Props) {
 	return (
-		<div className='h-screen flex items-center justify-center'>
+		<div className='border-4 border-indigo-500 h-screen flex items-center justify-center'>
 			<form className='bg-blue-400 p-6 rounded-lg shadow-lg w-xl' onSubmit={onSubmit}>
 				<h1 className="text-2xl font-bold mb-4">{formHeader}</h1>
 				{config.map(input => (
