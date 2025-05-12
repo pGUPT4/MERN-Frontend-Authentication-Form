@@ -31,20 +31,19 @@ export default function useLogin() {
 
             console.log('data ', data);
             const { success, message } = data;
-            if (success) {
-                toast.success('Success!', {
+            if (data) {
+                toast.success('Logged in', {
                     position: "top-right",
                 });
 
                 setTimeout(() => {
                     router.push("/");
                 }, 1000);
-            } else {
-                toast.error(message, {
-                    position: "top-right",
-                  });
             }
             } catch (error) {
+                toast.error('There was an error logging in. Please try again', {
+                    position: "top-right",
+                });
                 console.log(error);
             }
             setInputValue({

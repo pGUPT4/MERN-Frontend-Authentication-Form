@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import {axiosInstance} from '../lib/axios'
+import { axiosInstance } from '../lib/axios';
 import { ToastContainer, toast } from "react-toastify";
 
 

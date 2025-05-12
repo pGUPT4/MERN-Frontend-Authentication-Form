@@ -41,3 +41,5 @@ const useHome = () => {
     //     router.push("/signup");
     // };
 }
+
+export default useHome;
