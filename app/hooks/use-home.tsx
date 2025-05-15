@@ -1,45 +1,22 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useCookies } from "react-cookie";
-import { ToastContainer, toast } from "react-toastify";
-import { axiosInstance } from "../lib/axios";
 
-const useHome = () => {
-  const router = useRouter();
-  const [cookies, ,removeCookie] = useCookies(['token']);
-  const [username, setUsername] = useState("");
+// import { useRouter } from "next/navigation";
+// import { ToastContainer, toast } from "react-toastify";
+import { useCheckQuery } from "@/redux/features/authApiSlice";
+import { useEffect } from "react";
 
-  useEffect(() => {
+interface Props {
+    id: String
+}
 
-    const verifyCookie = async () => {
+const useHome = ({id}: Props) => {
+    const { data } = useCheckQuery({id});
+    // const router = useRouter();
 
-        if (!cookies.token) {
-            router.push("/auth/login");
-        }
+    useEffect(()=>{
+        
+    })
 
-        const { data } = await axiosInstance.post(
-            "/",
-            {},
-            { withCredentials: true }
-        );
-
-        const { status, user } = data;
-
-        setUsername(user);
-
-        return status
-            ? toast(`Hello ${user}`, {
-                position: "top-right",
-            })
-            : (removeCookie("token"), router.push("/auth/login"));
-        };
-            verifyCookie();
-        }, [cookies, router, removeCookie]);
-
-    // const Logout = () => {
-    //     removeCookie("token");
-    //     router.push("/signup");
-    // };
+    return data.email
 }
 
 export default useHome;

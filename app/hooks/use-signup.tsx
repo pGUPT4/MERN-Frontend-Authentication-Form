@@ -1,11 +1,15 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { axiosInstance } from '../lib/axios';
 import { ToastContainer, toast } from "react-toastify";
+import { useSignupMutation } from '@/redux/features/authApiSlice';
+import { useDispatch } from 'react-redux';
 
 
 export default function useSignUp() {
+    const dispatch = useDispatch();
 	const router = useRouter();
+
+    const [signup, {isLoading}] = useSignupMutation();
 
 	const [inputValue, setInputValue] = useState({
 		email: '',
@@ -24,35 +28,15 @@ export default function useSignUp() {
 	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		try {
-            const { data } = await axiosInstance.post(
-                "auth/signup",
-                {...inputValue,},
-                { withCredentials: true }
-            );
-
-            const { success, message } = data;
-
-            if (success) {
-                toast.success(message, {
-                    position: "bottom-right",
-                });
-
-                setTimeout(() => {router.push("/router/login");}, 1000);
-            } else {
-                toast.error(message, {
-                    position: "bottom-left",
-                });
-            }
-            } catch (error) {
-                console.log(error);
-            }
-            setInputValue({
-                ...inputValue,
-                email: "",
-                password: "",
-                re_password: "",
-            });
+		signup({ email, password, re_password })
+			.unwrap()
+			.then(() => {
+				toast.success('Please check email to verify account');
+				router.push('/auth/login');
+			})
+			.catch(() => {
+				toast.error('Failed to register account');
+			});
 	};
 
 	return {

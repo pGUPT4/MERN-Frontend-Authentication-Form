@@ -1,10 +1,15 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { axiosInstance } from '../lib/axios';
+import { useLoginMutation } from '../../redux/features/authApiSlice';
+import { useDispatch } from 'react-redux';
+import { setAuth } from '../../redux/features/authSlice';
 
 export default function useLogin() {
+    const dispatch = useDispatch();
 	const router = useRouter();
+
+    const [login, {isLoading}] = useLoginMutation();
 
 	const [inputValue, setInputValue] = useState({
 		email: '',
@@ -22,34 +27,15 @@ export default function useLogin() {
 	const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		try {
-            const { data } = await axiosInstance.post(
-                "auth/login",
-                {...inputValue,},
-                { withCredentials: true }
-            );
-
-            console.log('data ', data);
-            const { success, message } = data;
-            if (data) {
-                toast.success('Logged in', {
-                    position: "top-right",
-                });
-
-                setTimeout(() => {
-                    router.push("/");
-                }, 1000);
-            }
-            } catch (error) {
-                toast.error('There was an error logging in. Please try again', {
-                    position: "top-right",
-                });
-                console.log(error);
-            }
-            setInputValue({
-                ...inputValue,
-                email: '',
-                password: '',
+        login({ email, password })
+            .unwrap()
+            .then(() => {
+                dispatch(setAuth());
+                toast.success('Logged in');
+                router.push('/');
+            })
+            .catch(() => {
+                toast.error('Failed to log in');
             });
 	};
 
